@@ -8,11 +8,9 @@ export class CredHelper {
     async getCreds() {
     }
 
-    async hashCreds(id, email, password) {
-        console.log(id);
-        console.log(email);
-        console.log(password);
-
-        
+    async hashPassword(id, email, password) {
+        const hashedPwd = await bcrypt.hash(password, 10);
+        console.log(hashedPwd);
+        return hashedPwd;
     }
 }

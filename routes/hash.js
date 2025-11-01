@@ -15,8 +15,21 @@ router.route('/')
     .post(async (req, res) => {
         const rh = req.services.restHelper;
         const ch = req.services.credHelper;
+        const user = req.body;
 
+        if (!user.pass) {
+            return rh.sendBad(res, {
 
+            });
+        }
+
+        const hashedPwd = await ch.hashedPwd(user.pass);
+        user['pass'] = hashedPwd;
+
+        rh.sendSuccess(res, {
+            message: ServerStrings.HASED_CREDS,
+            response: user
+        })
     });
 
 export default router;
