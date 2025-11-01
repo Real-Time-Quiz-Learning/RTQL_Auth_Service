@@ -19,15 +19,15 @@ router.route('/')
 
         if (!user.pass) {
             return rh.sendBad(res, {
-
+                message: ServerStrings.NO_PASSWORD_TO_HASH
             });
         }
 
-        const hashedPwd = await ch.hashedPwd(user.pass);
+        const hashedPwd = await ch.hashPassword(user.pass);
         user['pass'] = hashedPwd;
 
         rh.sendSuccess(res, {
-            message: ServerStrings.HASED_CREDS,
+            message: ServerStrings.HASHED_CREDS,
             response: user
         })
     });
