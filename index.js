@@ -1,5 +1,6 @@
 import process from 'process';
 import express from 'express';
+import cors from 'cors';
 
 import { RestHelper } from './services/restHelper.js';
 import { TokenHelper } from './services/tokenHelper.js';
@@ -16,6 +17,14 @@ class Server {
 
         this.root   = process.cwd();
         this.app    = express();
+
+        // Cors policy configuraiton
+        this.corsOptions = {
+            optionSuccessStatus: 204,
+            origin: '*',
+            methods: 'GET,POST',
+            allowedHeaders: [ 'Content-Type', 'Authorization' ]
+        };
 
         // Services
         this.restHelper     = new RestHelper();
@@ -37,6 +46,7 @@ class Server {
 
     start() {
         // Generic middleware
+        this.app.use(cors(this.corsOptions));
         this.app.use(express.static(`${this.root}/public`));
         this.app.use(this.serviceMiddlewareBound);
 
