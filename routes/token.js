@@ -8,9 +8,7 @@ router.use(express.json());
 router.route('/validate')
     .get(async (req, res) => {
         const rh = req.services.restHelper;
-        return rh.sendSuccess(res, {
-            message: 'token validate'
-        })
+        const th = req.services.tokenHelper;
     })
     .post(async (req, res) => {
         const rh            = req.services.restHelper;
@@ -18,28 +16,21 @@ router.route('/validate')
         const authHeader    = req.headers['authorization'];
         const token         = authHeader && authHeader.split(' ')[1];
 
-        if (token === null) {
+        if (token === null)
             return rh.sendBad(res, {
                 message: ServerStrings.NULL_TOKEN
             });
-        }
 
-        const vRes = await th.validate(token);
-        console.log(vRes);
-        return rh.sendSuccess(res, {
-            message: ServerStrings.VALIDATION
-        });
-    });
+        const vRes = await th.verify(token);
+        if (!vRes)
+            return rh.sendBad(res, {
+                message: ServerStrings.VALIDATION_FAILED
+            });
 
-router.route('/create')
-    .get(async (req, res) => {
-        const rh = req.services.restHelper;
         return rh.sendSuccess(res, {
-            message: 'token create'
+            message: ServerStrings.VALIDATION,
+            response: vRes
         });
-    })
-    .post(async (req, res) => {
-        // Some business logic here I guess
     });
 
 export default router;

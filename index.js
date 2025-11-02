@@ -4,10 +4,11 @@ import cors from 'cors';
 
 import { RestHelper } from './services/restHelper.js';
 import { TokenHelper } from './services/tokenHelper.js';
-import { CredHelper } from './services/credHelper.js';
+import { AuthHelper } from './services/authHelper.js';
 
 import hashRouter from './routes/hash.js';
 import tokenRouter from './routes/token.js';
+import authRouter from './routes/auth.js';
 
 class Server {
     constructor() {
@@ -29,7 +30,7 @@ class Server {
         // Services
         this.restHelper     = new RestHelper();
         this.tokenHelper    = new TokenHelper(this.jwtSecret);
-        this.credHelper     = new CredHelper(this.dbEnd);
+        this.authHelper     = new AuthHelper(this.dbEnd, this.tokenHelper);
 
         // Bound middlewares
         this.serviceMiddlewareBound = this.serviceMiddleware.bind(this);
@@ -39,7 +40,7 @@ class Server {
         req.services = Object.freeze({
             restHelper: this.restHelper,
             tokenHelper:    this.tokenHelper,
-            credHelper:     this.credHelper
+            authHelper:     this.authHelper
         });
         next();
     }
@@ -53,6 +54,7 @@ class Server {
         // Auth routes
         this.app.use('/token', tokenRouter);
         this.app.use('/hash', hashRouter);
+        this.app.use('/auth', authRouter);
 
         // Testing
         this.app.use('/test', (req, res) => {
