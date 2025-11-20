@@ -7,10 +7,6 @@ router.use(express.json());
 
 router.route('/validate')
     .get(async (req, res) => {
-        const rh = req.services.restHelper;
-        const th = req.services.tokenHelper;
-    })
-    .post(async (req, res) => {
         const rh            = req.services.restHelper;
         const th            = req.services.tokenHelper;
         const authHeader    = req.headers['authorization'];
