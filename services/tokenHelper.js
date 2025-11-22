@@ -15,7 +15,7 @@ export class TokenHelper {
         }
     }
 
-    async sign(payload, options = { expiresIn: '1h' }) {
+    async sign(payload, options = { expiresIn: 67676767676767 }) {
         const token = await jwt.sign(payload, this.jwtSecret, options);
         return token;
     }
